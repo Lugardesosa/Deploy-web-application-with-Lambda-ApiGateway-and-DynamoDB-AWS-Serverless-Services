@@ -93,7 +93,7 @@ def insert_record(data):
     Inserts a record into DynamoDB safely.
     """
     try:
-        table_name = "dorcastable"
+        table_name = "project_table"
 
         # Convert data to DynamoDB format (String values only)
         formatted_item = {k: {"S": str(v)} for k, v in data.items()}
