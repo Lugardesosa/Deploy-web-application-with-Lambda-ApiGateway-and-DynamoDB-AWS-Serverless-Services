@@ -70,8 +70,6 @@ Table name: project_table
 
 Primary key: fname (string)
 
-Attributes: lname (string), email (string), message (string)
-
 Click on "Create table" to create the table.
 
 ---
