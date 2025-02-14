@@ -66,7 +66,7 @@ Log in to the AWS Management Console and navigate to the DynamoDB dashboard.
 
 Click on "Create table" and enter the following settings:
 
-Table name: dorcastable
+Table name: project_table
 
 Primary key: fname (string)
 
