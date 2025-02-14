@@ -37,15 +37,19 @@ A Python environment with the necessary dependencies installed (e.g., boto3).
 
 # Deployment Steps
 
-# Create a GitHub repository
+Create a GitHub repository
 
-# Clone the repository and open the folder of the cloned repo
+Clone the repository and open the folder of the cloned repo
 git clone 
 
-# Create an IAM Role
+---
+
+Create an IAM Role
 Create an IAM role for the Lambda function. Attach the AWS Lambda Basic Execution role (which provides permissions to write logs whenever executions happens) and Amazon DynamoDB Full Access role permission.
 
-# Create a DynamoDB Table
+---
+
+Create a DynamoDB Table
 Log in to the AWS Management Console and navigate to the DynamoDB dashboard.
 Click on "Create table" and enter the following settings:
 Table name: dorcastable
@@ -53,7 +57,9 @@ Primary key: fname (string)
 Attributes: lname (string), email (string), message (string)
 Click on "Create table" to create the table.
 
-# Create an S3 Bucket
+---
+
+Create an S3 Bucket
 Log in to the AWS Management Console and navigate to the S3 dashboard.
 Click on "Create bucket" and enter the following settings:
 Bucket name: serverlessitems
@@ -62,7 +68,9 @@ Click on "Create bucket" to create the bucket.
 Upload HTML Files to S3
 Upload the contact_us.html and success.html files to the serverlessitems bucket.
 
-# Create a Lambda Function
+---
+
+Create a Lambda Function
 Log in to the AWS Management Console and navigate to the Lambda dashboard.
 Click on "Create function" and enter the following settings:
 Function name: contact-form-handler
@@ -71,7 +79,9 @@ Handler: lambda_function.lambda_handler
 Role: Select created Lambda role.
 Click on "Create function" to create the function.
 
-# Configure API Gateway
+__
+
+Configure API Gateway
 Log in to the AWS Management Console and navigate to the API Gateway dashboard.
 Click on "Create API" and enter the following settings:
 API name: contact-form-api
