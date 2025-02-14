@@ -4,7 +4,7 @@ This project demonstrates how to deploy a web application using AWS Lambda, API 
 
 # Archictecture Diagram
 ## **Technical Architecture**
-![Architectural Diagram](https://github.com/Lugardesosa/Deploy-web-application-with-Lambda-ApiGateway-and-DynamoDB-AWS-Serverless-Services/blob/main/DEPLOY~1.PDF)
+![Architectural Diagram](https://github.com/Lugardesosa/Deploy-web-application-with-Lambda-ApiGateway-and-DynamoDB-AWS-Serverless-Services/blob/main/DEPLOY~1.PNG)
 
 # Here's a brief description of each component:
 
