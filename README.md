@@ -49,7 +49,7 @@ A Python environment with the necessary dependencies installed (e.g., boto3).
 Create a GitHub repository
 
 Clone the repository and open the folder of the cloned repo
-git clone 
+git clone https://github.com/Lugardesosa/Deploy-web-application-with-Lambda-ApiGateway-and-DynamoDB-AWS-Serverless-Services.git
 
 ---
 
