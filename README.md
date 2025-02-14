@@ -107,7 +107,7 @@ Role: Select created Lambda role.
 
 Click on "Create function" to create the function.
 
-__
+---
 
 Configure API Gateway
 
@@ -134,6 +134,8 @@ Integration type: Lambda function
 Lambda function: contact-form-handler
 
 Click on "Save" to save the changes.
+
+---
 
 Test the Application
 
