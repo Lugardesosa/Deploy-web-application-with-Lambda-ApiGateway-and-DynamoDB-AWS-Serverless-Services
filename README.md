@@ -1,1 +1,1 @@
-# Deploy-web-application-with-Lambda-ApiGateway-and-DynamoDB-AWS-Serverless-Services
+# Deploy-web-application-with-Lambda-ApiGateway-and-DynamoDB | AWS-Serverless-Services
