@@ -82,12 +82,19 @@ Click on "Create function" to create the function.
 __
 
 Configure API Gateway
+
 Log in to the AWS Management Console and navigate to the API Gateway dashboard.
+
 Click on "Create API" and enter the following settings:
+
 API name: contact-form-api
+
 Protocol: REST
+
 Click on "Create API" to create the API.
+
 Create a new resource and method for the contact form submission:
+
 Select “GET” option, select Lambda function, select Lambda proxy integration to send the request to the Lambda function as a structured event.
 Click on create method and select “POST”. Repeat the same steps as done in “GET”
 The “GET” and “POST” are the API gateways with endpoints for the CRUD (Create Read Update and Delete)
