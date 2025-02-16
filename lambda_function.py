@@ -1,109 +1,78 @@
+#This code is a Lambda function written in Python, which is triggered by an API Gateway event. The function handles HTTP GET and POST requests, serving HTML pages and inserting data into a DynamoDB table, respectively.
+
+#Importing Libraries and Setting Up Logging
+#"json" for handling JSON data
+#"boto3" for interacting with AWS services, such as DynamoDB
+#"logging" for logging purposes
 import json
 import boto3
 import logging
-import urllib.parse
 
-# Configure logging for better debugging
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+#The lambda_handler function is the entry point of the Lambda function. It takes two parameters:
+#'event': an object containing information about the API Gateway event that triggered the Lambda function
+#'context': an object containing information about the Lambda function's execution context
 
-# Initialize AWS clients
-dynamodb_client = boto3.client('dynamodb')
-s3_client = boto3.client('s3')
-
-# Set your S3 bucket name for storing HTML files
-BUCKET_NAME = "serverlessitems"
-
+#The function calls the page_router function, passing in the HTTP method, query parameters, and request body from the event object. If an exception occurs, it returns a 500 error response with the error message.
 def lambda_handler(event, context):
     try:
-        # Log the event for debugging
-        logger.info(f"Received event: {json.dumps(event)}")
-
-        # Extract method and body safely
-        http_method = event.get('httpMethod', '')
-        query_params = event.get('queryStringParameters', {})
-        body = event.get('body', '')
-
-        return page_router(http_method, query_params, body)
-
+        mypage = page_router(event['httpMethod'], event['queryStringParameters'], event['body'])
+        return mypage
     except Exception as e:
-        logger.error(f"Lambda execution error: {str(e)}")
         return {
-            'statusCode': 500,
-            'body': json.dumps({'error': 'Internal server error. Check CloudWatch logs for details.'})
+           'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
         }
-
-def page_router(http_method, query_params, form_body):
+#GET Request Handling
+def page_router(http_method, query_params, formbody):
     if http_method == 'GET':
-        return serve_static_page('contactus.html')
-
+        try:
+            with open('contactus.html', 'r') as file:
+                html_content = file.read()
+                return {
+                   'statusCode': 200,
+                    'headers': {"Content-Type": "text/html"},
+                    'body': html_content
+                }
+        except Exception as e:
+            return {
+               'statusCode': 500,
+                'body': json.dumps({'error': str(e)})
+            }
+#POST Request Handling
     elif http_method == 'POST':
         try:
-            # Ensure the body is valid JSON
-            if not form_body:
-                raise ValueError("Request body is missing")
-                
-            data = dict(urllib.parse.parse_qsl(form_body))
-
-            # Insert record into DynamoDB
-            insert_record(data)
-
-            return serve_static_page('success.html')
-
-        except json.JSONDecodeError:
-            return {
-                'statusCode': 400,
-                'body': json.dumps({'error': 'Invalid JSON format in request body'})
-            }
+            insert_record(formbody)
+            with open('success.html', 'r') as htmlfile:
+                html_content = htmlfile.read()
+                return {
+                   'statusCode': 200,
+                    'headers': {"Content-Type": "text/html"},
+                    'body': html_content
+                }
         except Exception as e:
-            logger.error(f"Error in page_router: {str(e)}")
             return {
-                'statusCode': 500,
+               'statusCode': 500,
                 'body': json.dumps({'error': str(e)})
             }
 
-def serve_static_page(filename):
-    """
-    Fetch an HTML file from S3 and return it as an HTTP response.
-    """
+    #make sure that the formbody string is not empty before attempting to parse it.
+def insert_record(formbody):
+    if not formbody:
+        return {
+           'statusCode': 400,
+            'body': json.dumps({'error': 'No form data provided'})
+        }
+    #Used the json.loads() function in a try-except block to catch any JSONDecodeError exceptions that may be thrown if the formbody string is not valid JSON.
     try:
-        response = s3_client.get_object(Bucket=BUCKET_NAME, Key=filename)
-        html_content = response["Body"].read().decode("utf-8")
-
+        formbody = json.loads(formbody)
+    except json.JSONDecodeError as e:
         return {
-            'statusCode': 200,
-            'headers': {"Content-Type": "text/html"},
-            'body': html_content
+           'statusCode': 400,
+            'body': json.dumps({'error': 'Invalid JSON data'})
         }
-    except s3_client.exceptions.NoSuchKey:
-        logger.error(f"File {filename} not found in S3 bucket.")
-        return {
-            'statusCode': 404,
-            'body': json.dumps({'error': 'Page not found'})
-        }
-    except Exception as e:
-        logger.error(f"Error retrieving {filename} from S3: {str(e)}")
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': 'Internal server error while retrieving page.'})
-        }
-
-def insert_record(data):
-    """
-    Inserts a record into DynamoDB safely.
-    """
-    try:
-        table_name = "project_table"
-
-        # Convert data to DynamoDB format (String values only)
-        formatted_item = {k: {"S": str(v)} for k, v in data.items()}
-
-        # Insert item into DynamoDB
-        response = dynamodb_client.put_item(TableName=table_name, Item=formatted_item)
-
-        logger.info(f"Successfully inserted record into {table_name}: {data}")
-
-        return response
-    except Exception as e:
-        logger.error(f"Error inserting into DynamoDB: {str(e)}")
-        raise
+    
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('project_table')
+#put_item method to insert a record into the DynamoDB table.
+    table.put_item(Item=formbody)
+    return
